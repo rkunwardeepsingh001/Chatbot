@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.pytest_cache/
+*.cover
+*.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+env/
+venv/
+ENV/
+.env
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# VS Code
+.vscode/
+
+# Node / frontend
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+/dist
+/.vite
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Others
+*.swp
+*.swo
