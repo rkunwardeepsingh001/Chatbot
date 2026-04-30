@@ -15,7 +15,7 @@ class SimpleCorsMiddleware:
             response = HttpResponse()
             logger.debug("Handling options request")
         else:
-            logger.error("Received non-OPTIONS request in SimpleCorsMiddleware: %s", request.method)
+            logger.debug("Passing through non-OPTIONS request in SimpleCorsMiddleware: %s", request.method)
             response = self.get_response(request)
 
         origin = request.headers.get('Origin')
@@ -26,6 +26,6 @@ class SimpleCorsMiddleware:
         else:
             response['Access-Control-Allow-Origin'] = '*'
             logger.debug("Set Access-Control-Allow-Origin to: %s", '*')
-        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, HEAD'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
