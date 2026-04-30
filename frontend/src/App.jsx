@@ -5,10 +5,16 @@ function App() {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [cardActive, setCardActive] = useState(false)
+  const [chatVisible, setChatVisible] = useState(false)
   const bottomRef = useRef(null)
+  const chatRef = useRef(null)
+  const inputRef = useRef(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [messages])
 
   const sendMessage = async () => {
@@ -49,14 +55,40 @@ function App() {
     sendMessage()
   }
 
+  const toggleChat = () => {
+    setChatVisible(prev => {
+      const next = !prev
+      if (next) {
+        if (chatRef.current) {
+          chatRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+        setCardActive(true)
+        setTimeout(() => setCardActive(false), 1200)
+      }
+      return next
+    })
+  }
+
   return (
     <div className="app-shell">
-      <div className="chat-card">
+      <button className="top-right-bg-btn" onClick={toggleChat}>{chatVisible ? 'Close AI' : 'Chat AI'}</button>
+      <div className="bg-scene">
+        <div className="bg-orb orb-1" />
+        <div className="bg-orb orb-2" />
+        <div className="bg-ring ring-1" />
+        <div className="bg-ring ring-2" />
+        <div className="bg-panel" />
+      </div>
+      <div className={`chat-card${cardActive ? ' active' : ''}${chatVisible ? ' visible' : ' hidden'}`} ref={chatRef}>
         <header className="chat-header">
           <div>
             <h1>Chatbot UI</h1>
             <p>Send a message and get a response from your Django chatbot API.</p>
           </div>
+          <button className="top-action-btn" type="button" onClick={toggleChat}>{chatVisible ? 'Close' : 'Chat AI'}</button>
         </header>
 
         <div className="chat-window">
@@ -78,6 +110,7 @@ function App() {
 
         <form className="chat-input-form" onSubmit={handleSubmit}>
           <input
+            ref={inputRef}
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Write your message..."

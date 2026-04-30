@@ -5,10 +5,16 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cardActive, setCardActive] = useState(false);
+  const [chatVisible, setChatVisible] = useState(false);
   const bottomRef = useRef(null);
+  const chatRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
   const sendMessage = async () => {
@@ -59,19 +65,47 @@ function App() {
     sendMessage();
   };
 
+  const toggleChat = () => {
+    setChatVisible(prev => {
+      const next = !prev;
+      if (next) {
+        if (chatRef.current) {
+          chatRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+        setCardActive(true);
+        setTimeout(() => setCardActive(false), 1200);
+      }
+      return next;
+    });
+  };
+
   return React.createElement(
     'div',
     { className: 'app-shell' },
+    React.createElement('button', { className: 'top-right-bg-btn', type: 'button', onClick: toggleChat }, chatVisible ? 'Close AI' : 'Chat AI'),
     React.createElement(
       'div',
-      { className: 'chat-card' },
+      { className: 'bg-scene' },
+      React.createElement('div', { className: 'bg-orb orb-1' }),
+      React.createElement('div', { className: 'bg-orb orb-2' }),
+      React.createElement('div', { className: 'bg-ring ring-1' }),
+      React.createElement('div', { className: 'bg-ring ring-2' }),
+      React.createElement('div', { className: 'bg-panel' })
+    ),
+    React.createElement(
+      'div',
+      { className: `chat-card${cardActive ? ' active' : ''}${chatVisible ? ' visible' : ' hidden'}`, ref: chatRef },
       React.createElement(
         'header',
         { className: 'chat-header' },
         React.createElement('div', null,
           React.createElement('h1', null, 'Chatbot UI'),
           React.createElement('p', null, 'Send a message and get a response from your Django chatbot API.')
-        )
+        ),
+        React.createElement('button', { className: 'top-action-btn', type: 'button', onClick: toggleChat }, chatVisible ? 'Close' : 'Chat AI')
       ),
       React.createElement(
         'div',
@@ -91,6 +125,7 @@ function App() {
         'form',
         { className: 'chat-input-form', onSubmit: handleSubmit },
         React.createElement('input', {
+          ref: inputRef,
           value: input,
           onChange: e => setInput(e.target.value),
           placeholder: 'Write your message...',
