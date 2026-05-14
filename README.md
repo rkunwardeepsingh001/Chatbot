@@ -88,3 +88,25 @@ python3 manage.py runserver
 # Run frontend locally
 cd frontend && npm run dev
 ```
+
+## Running tests
+
+Run the Django test suite from the project root:
+
+```bash
+python3 manage.py test
+```
+
+If you see a logging error like `ValueError: Unable to configure handler 'file'`
+or `PermissionError: Permission denied: logs/app.log`, it usually means the
+`logs/` directory was created by Docker with different ownership. Fix it with:
+
+```bash
+sudo chown -R $USER:$USER logs
+```
+
+Then run the tests again:
+
+```bash
+python3 manage.py test
+```
