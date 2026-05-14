@@ -113,3 +113,7 @@ xdg==5
 xkit==0.0.0
 yarl==1.23.0
 zipp==1.0.0
+gunicorn
+psycopg2-binary
+dj-database-url
+whitenoise
